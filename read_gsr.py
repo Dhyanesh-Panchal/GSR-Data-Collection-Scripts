@@ -40,6 +40,7 @@ def read_data(reading_time: int):
             file.write(line)
 
 
+# todo: Alter the function to accept file path for final .csv output as parameter.
 def process_data(data_file_path):
     '''
     This function processes the Data of of intermediate file (by `read_data()`)
@@ -49,6 +50,8 @@ def process_data(data_file_path):
     with open(data_file_path, 'r') as file:
         data = file.readlines()
 
+    # .txt file contains Extra '\n' between each reading, so jumping over those.
+    # todo: modify the read_data() to record data conveniently
     data = data[::2]
 
     cleaned_data = []
