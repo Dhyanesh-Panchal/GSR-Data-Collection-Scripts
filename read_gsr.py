@@ -5,17 +5,17 @@ import time
 
 
 def read_data(reading_time: int):
-    '''
+    """
     read_data() function waits for a serial connection.
     after the connection, it records the data for given time interval -> `reading_time (sec)`.
-    output is written in `data.txt` file.  
-    '''
+    output is written in `data.txt` file.
+    """
 
     # Waiting for serial port
     print("Looking For serial connection ")
     while True:
         try:
-            reader = se.Serial('COM3', 2000000)
+            reader = se.Serial("COM3", 2000000)
         except BaseException:
             # print(BaseException)
             continue
@@ -30,24 +30,31 @@ def read_data(reading_time: int):
 
     print("Reading Sensor data !")
 
-    while (time.time_ns()-start_time < reading_time*10**9):
-        serial_data.append(reader.readline().decode('utf-8'))
+    while time.time_ns() - start_time < reading_time * 10**9:
+        # print("inside the loop")
+        line = reader.readline().decode("utf-8")
+        # print(line)
+        if line:
+            serial_data.append(line)
+        else:
+            print("No Data, waiting for data....")
+            time.sleep(1)
     print("reading over!")
 
     # write in intermediate file
-    with open('data.txt', 'w') as file:
+    with open("data.txt", "w") as file:
         for line in serial_data:
             file.write(line)
 
 
 # todo: Alter the function to accept file path for final .csv output as parameter.
-def process_data(data_file_path):
-    '''
+def process_data(data_file_path, output_file_name, video_genre):
+    """
     This function processes the Data of of intermediate file (by `read_data()`)
     and writes a csv file of processed Data.
-    '''
+    """
     print("Processing Data!")
-    with open(data_file_path, 'r') as file:
+    with open(data_file_path, "r") as file:
         data = file.readlines()
 
     # .txt file contains Extra '\n' between each reading, so jumping over those.
@@ -56,20 +63,22 @@ def process_data(data_file_path):
 
     cleaned_data = []
     for indx, line in enumerate(data):
-        cleaned_data.append(line.split('\t'))
-        cleaned_data[indx][1] = cleaned_data[indx][1].split('\n')[0]
+        cleaned_data.append(line.split("\t"))
+        cleaned_data[indx][1] = cleaned_data[indx][1].split("\n")[0]
 
     cleaned_data = np.array(cleaned_data)
     df = pd.DataFrame(cleaned_data)
     df.columns = ["time(micros)", "GSR"]
 
-    df.to_csv('./sample-data.csv', index=False)
+    df.to_csv(f"./{video_genre}_{output_file_name}.csv", index=False)
 
     print("Done!")
 
 
 # main_call
-if __name__ == '__main__':
+if __name__ == "__main__":
     reading_time = int(input("Enter the listening duration in seconds:"))
     read_data(reading_time)
-    process_data('./data.txt')
+    subject_name = input("Enter the subject name:")
+    video_genre = input("Enter the genre class:")
+    process_data("./data.txt", subject_name, video_genre)
