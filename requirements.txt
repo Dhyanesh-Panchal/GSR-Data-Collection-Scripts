@@ -1,4 +1,5 @@
 pandas
 numpy
 pyserial
-neurokit
+neurokit2
+scikit-learn
