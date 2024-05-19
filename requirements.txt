@@ -3,3 +3,5 @@ numpy
 pyserial
 neurokit2
 scikit-learn
+ipykernal
+requests
