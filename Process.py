@@ -28,4 +28,6 @@ def preprocess_sensor_data(source_data_fp: str, destination_folder: str):
     processed_data.to_csv(os.path.join(destination_folder, file_name), index=False)
 
 
-preprocess_sensor_data("./Collected_Data/Calm_Tirth.csv", "Test_dir")
+preprocess_sensor_data(
+    "./Collected_Data/Calm_Tirth.csv", "./Preprocessed_Data/Features/"
+)
