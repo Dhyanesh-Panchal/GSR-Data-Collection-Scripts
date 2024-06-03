@@ -2,3 +2,5 @@
 plot_gsr.py
 env
 Preprocessed_Data
+Test_dir
+__pycache__
